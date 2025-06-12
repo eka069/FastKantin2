@@ -25,7 +25,14 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helper/cart_function.php",
+            "app/Helper/image_function.php",
+            "app/Helper/menu_function.php",
+            "app/Helper/order_function.php",
+            "app/Helper/user_function.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -65,4 +72,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true
+
 }

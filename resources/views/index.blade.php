@@ -1,4 +1,15 @@
-<!-- Konten Utama -->
+
+@extends('layout.main')
+
+@section('title', 'Beranda')
+
+@section('content')
+
+
+<main class="pt-20"> {{-- Sesuaikan dengan tinggi header --}}
+    @yield('content')
+</main>
+
 <div class="container mx-auto px-4 py-8">
     <header class="mb-8">
         <h1 class="text-3xl font-bold text-center mb-2">FAST KANTIN</h1>
@@ -14,27 +25,46 @@
             <input type="text" id="search-input" placeholder="Cari makanan..." class="pl-10 w-full p-2 border rounded-md">
         </div>
 
-        <div class="flex gap-2">
-            <select id="category-filter" class="p-2 border rounded-md w-[180px]">
-                <option value="all">Semua Kategori</option>
-                <!-- Kategori akan diisi dari API -->
-            </select>
+        <select id="category-filter" class="p-2 border rounded-md w-[180px]">
+            <option value="all">Semua Kategori</option>
+            @foreach ($category as $c)
+    <option value="{{ $c->name }}">{{ $c->name }}</option>
+@endforeach
 
-            <button id="filter-button" class="p-2 border rounded-md">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-            </button>
-        </div>
+
     </div>
 
     <!-- Daftar Menu Makanan -->
     <div id="food-items-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div class="loading">
-            <div class="loading-spinner"></div>
+        @foreach ($foodItems as $item)
+        <div class="food-item border rounded-lg overflow-hidden" data-category="{{ $item->category->nama_kategori ?? 'Tanpa Kategori' }}">
+            <div class="relative h-48 w-full">
+                <img src="{{ asset('storage/' . $item->gambar) }}" class="w-full h-40 object-cover rounded-md" alt="{{ $item->nama_produk }}">
+                <span class="absolute top-2 right-2 bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                    {{ $item->category->nama_kategori ?? 'Tanpa Kategori' }}
+                </span>
+            </div>
+            <div class="p-4">
+                <h3 class="font-semibold text-lg mb-1">{{ $item->nama_produk }}</h3>
+                <p class="text-gray-600 text-sm mb-2">{{ $item->deskripsi }}</p>
+                <p class="font-bold text-lg">Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
+                <p class="text-sm text-gray-500 mt-1">Tersedia</p>
+            </div>
+            <div class="p-4 pt-0 flex gap-2">
+                <a href="{{ route('detail', $item->id) }}" class="detail-link flex-1 block bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-md transition-colors">Detail</a>
+                <form method="POST" action="{{ route('cart.store') }}">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $item->id }}">
+                    <button type="submit" class="add-to-cart bg-green-600 hover:bg-green-700 text-white py-2 px-2 rounded-md transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                    </button>
+            </div>
         </div>
     </div>
-</div>
+    @endforeach
+
 
 <!-- Template untuk item makanan -->
 <template id="food-item-template">
@@ -118,6 +148,7 @@
             });
     });
 </script>
+@endsection
 <!-- Tambahkan console untuk debugging -->
 <script>
     console.log("Halaman beranda dimuat. Versi: 1.0.3");

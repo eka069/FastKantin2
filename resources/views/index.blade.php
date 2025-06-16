@@ -1,53 +1,117 @@
-@extends('layout.main')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beli Makanan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
 
-@section('title', 'Beranda')
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-indigo-600">FoodMart</h1>
 
-@section('content')
+      <!-- Search input -->
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Cari makanan..."
+        class="hidden sm:block w-72 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
 
-<div class="container mx-auto px-4 py-8">
-    <!-- Header -->
-    <header class="mb-8 text-center">
-        <h1 class="text-3xl font-bold mb-2">FAST KANTIN</h1>
-        <p class="text-gray-600">Pesan makanan kantin dengan cepat dan mudah</p>
-    </header>
-
-    <!-- Daftar Menu Makanan -->
-    <div id="food-items-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        @foreach ($foodItems as $item)
-        <div class="food-item border rounded-lg overflow-hidden" data-category="{{ $item->category->name ?? 'Tanpa Kategori' }}">
-            <!-- Gambar dan Kategori -->
-            <div class="relative h-48 w-full">
-                <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-40 object-cover rounded-md" alt="{{ $item->name }}">
-                <span class="absolute top-2 right-2 bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
-                    {{ $item->category->name ?? 'Tanpa Kategori' }}
-                </span>
-            </div>
-
-            <!-- Info Produk -->
-            <div class="p-4">
-                <h3 class="font-semibold text-lg mb-1">{{ $item->name}}</h3>
-                <p class="text-gray-600 text-sm mb-2">{{ $item->deskripsi }}</p>
-                <p class="font-bold text-lg">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
-                <p class="text-sm text-gray-500 mt-1">Tersedia</p>
-            </div>
-
-            <!-- Tombol Aksi -->
-            <div class="p-4 pt-0 flex gap-2">
-                <a href="{{ route('detail', $item->id) }}" class="detail-link flex-1 block bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-md transition-colors">Detail</a>
-
-                <form method="POST" action="{{ route('cart.store') }}">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $item->id }}">
-                    <button type="submit" class="add-to-cart bg-green-600 hover:bg-green-700 text-white py-2 px-2 rounded-md transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </button>
-                </form>
-            </div>
-        </div>
-        @endforeach
+      <!-- Menu -->
+      <div class="flex items-center space-x-6 text-sm">
+        <a href="#" class="text-gray-600 hover:text-indigo-600">Profile</a>
+        <a href="#" class="text-gray-600 hover:text-indigo-600">Cart</a>
+        <a href="#" class="text-gray-600 hover:text-indigo-600">Riwayat</a>
+        <a href="#" class="text-red-500 hover:text-red-700">Logout</a>
+      </div>
     </div>
-</div>
 
-@endsection
+    <!-- Search input mobile -->
+    <div class="sm:hidden px-6 pb-4">
+      <input
+        id="searchInputMobile"
+        type="text"
+        placeholder="Cari makanan..."
+        class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="max-w-7xl mx-auto px-6 py-10">
+    <div id="foodList" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-10 space-x-2" id="pagination"></div>
+  </main>
+
+  <script>
+    const foodItems = [
+      "Nasi Goreng", "Mie Ayam", "Sate Ayam", "Bakso", "Rendang", "Soto Ayam", "Ayam Geprek", "Tahu Gejrot",
+      "Nasi Kuning", "Gudeg", "Pecel Lele", "Lontong Sayur", "Sop Buntut", "Rawon", "Gado-Gado", "Ayam Bakar",
+      "Pempek", "Nasi Uduk", "Ikan Bakar", "Ketoprak", "Seblak", "Martabak", "Siomay", "Tongseng", "Coto Makassar"
+    ];
+
+    const itemsPerPage = 8;
+    let currentPage = 1;
+
+    function renderFoodList() {
+      const queryDesktop = document.getElementById("searchInput").value.toLowerCase();
+      const queryMobile = document.getElementById("searchInputMobile").value.toLowerCase();
+      const query = queryDesktop || queryMobile;
+
+      const filteredItems = foodItems.filter(item => item.toLowerCase().includes(query));
+      const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+      const start = (currentPage - 1) * itemsPerPage;
+      const itemsToShow = filteredItems.slice(start, start + itemsPerPage);
+
+      const listEl = document.getElementById("foodList");
+      listEl.innerHTML = itemsToShow.map(item => `
+        <div class="bg-white p-4 rounded-xl shadow hover:shadow-md transition">
+          <img src="https://source.unsplash.com/featured/300x200?${encodeURIComponent(item)},food" class="rounded-md mb-3 w-full h-40 object-cover" alt="${item}"/>
+          <h2 class="text-lg font-semibold">${item}</h2>
+          <p class="text-sm text-gray-500">Rp ${Math.floor(Math.random() * 20000 + 10000).toLocaleString()}</p>
+          <button class="mt-3 w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition">Beli Sekarang</button>
+        </div>
+      `).join("");
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      const paginationEl = document.getElementById("pagination");
+      paginationEl.innerHTML = "";
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = `px-4 py-2 rounded-md border ${i === currentPage ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`;
+        btn.onclick = () => {
+          currentPage = i;
+          renderFoodList();
+        };
+        paginationEl.appendChild(btn);
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", () => {
+      currentPage = 1;
+      renderFoodList();
+    });
+
+    document.getElementById("searchInputMobile").addEventListener("input", () => {
+      currentPage = 1;
+      renderFoodList();
+    });
+
+    renderFoodList();
+  </script>
+</body>
+</html>

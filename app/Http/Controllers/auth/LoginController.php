@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -13,44 +16,30 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+
     public function login(Request $request)
     {
-        $name = trim($request->input('name'));
-        $password = $request->input('password');
-        $role = $request->input('role');
-
-        if (empty($name) || empty($password)) {
-            return back()->withInput()->with('error', 'Nama dan password harus diisi');
-        }
-
-        // Cek ke database (ganti dengan model sebaiknya)
-        $user = DB::table('users')
-            ->where('name', $name)
-            ->where('role', $role)
-            ->first();
-
-        if (!$user || !password_verify($password, $user->password)) {
-            return back()->withInput()->with('error', 'Email atau password salah');
-        }
-
-        if ($user->role === 'seller') {
-            return redirect()->route('seller.index');
-        } else {
-            return redirect()->route('Order');
-        }
-
-        if (Session::get('user.role') !== 'seller') {
-            abort(403, 'Unauthorized');
-        }
-
-        // Simpan ke session
-        Session::put('user',
-        [
-            'id' => $user->id,
-            'name' => $user->name,
-            'role' => $user->role
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required',
         ]);
 
-        return redirect()->route('profile');
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['email' => 'Email atau password salah'])->withInput();
+        }
+
+        Auth::login($user);
+
+        if ($user->role === 'seller') {
+            return redirect('/dashboard');
+        } elseif ($user->role === 'user') {
+            return redirect('/');
+        }
+
+        // Fallback jika role tidak sesuai
+        Auth::logout();
+        return redirect('/login')->withErrors(['role' => 'Role tidak dikenali.']);
     }
 }

@@ -1,63 +1,85 @@
-@extends('layout.main')
-
-@section('content')
-<div class="container max-w-md mx-auto px-4 py-8">
-    <div class="text-center mb-8">
-        <h1 class="text-2xl font-bold">Masuk ke Akun</h1>
-        <p class="text-gray-600 mt-2">Masukkan nama dan password Anda untuk melanjutkan</p>
-    </div>
-
-    <div class="bg-white rounded-lg border p-6">
-        @if (session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('login') }}" class="space-y-4">
-            @csrf
-            <div>
-                <label for="Name" class="block font-medium mb-1">Name</label>
-                <input type="name" id="name" name="name" value="{{ old('name') }}"
-                    class="w-full p-2 border rounded-md" required>
-            </div>
-
-            <div>
-                <label for="password" class="block font-medium mb-1">Password</label>
-                <input type="password" id="password" name="password"
-                    class="w-full p-2 border rounded-md" required>
-            </div>
-
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                    <label for="remember" class="ml-2 block text-sm text-gray-700">Ingat saya</label>
-                </div>
-
-                <a href="#" class="text-sm text-blue-600 hover:underline">Lupa password?</a>
-            </div>
-
-            <div>
-                <label for="role" class="block font-medium mb-1">Role</label>
-                <select id="role" name="role" class="w-full p-2 border rounded-md" required>
-                    <option value="" selected disabled>Pilih role</option>
-                    <option value="user">User</option>
-                    <option value="seller">Seller</option>
-                </select>
-            </div>
-
-            <div class="pt-4">
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
-                    Masuk
-                </button>
-            </div>
-        </form>
-
-        <div class="mt-6 text-center">
-            <p class="text-sm text-gray-600">
-                Belum punya akun? <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Daftar sekarang</a>
-            </p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Responsive Admin Dashboard Template">
+    <meta name="keywords" content="admin,dashboard">
+    <meta name="author" content="stacks">
+    <title>Circl - Responsive Admin Dashboard Template</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,700,800&display=swap" rel="stylesheet">
+    <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/plugins/font-awesome/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/plugins/perfectscroll/perfect-scrollbar.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/main.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="login-page">
+    <div class="loader">
+        <div class="spinner-grow text-primary" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
-</div>
-@endsection
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-12 col-lg-4">
+                <div class="card login-box-container">
+                    <div class="card-body">
+                        <div class="authent-logo">
+                            <img src="{{ asset('assets/images/logo@2x.png') }}" alt="">
+                        </div>
+                        <div class="authent-text">
+                            <p>Welcome to Fast Canteen</p>
+                            <p>Please Sign-in to your account.</p>
+                        </div>
+
+                        <form method="POST" action="">
+                            @csrf
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="floatingInput" name="email" value="{{ old('email') }}" placeholder="name@example.com" required>
+                                    <label for="floatingInput">Email address</label>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="floatingPassword" name="password" placeholder="Password" required>
+                                    <label for="floatingPassword">Password</label>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember">
+                                <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                            </div>
+                            <div class="d-grid mb-2">
+                                <button type="submit" class="btn btn-info m-b-xs">Sign In</button>
+                            </div>
+                            <div class="d-grid">
+                                <a href="{{ route('register') }}" class="btn btn-secondary">Register</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('assets/plugins/jquery/jquery-3.4.1.min.js') }}"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="{{ asset('assets/plugins/perfectscroll/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/main.min.js') }}"></script>
+</body>
+</html>

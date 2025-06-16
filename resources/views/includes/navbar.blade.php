@@ -106,14 +106,14 @@
                 <img src="{{ Auth::check() && Auth::user()->profile_image ? Auth::user()->profile_image : asset('assets/images/profile.jpeg') }}" alt="Profile Image" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
             </a>
 
-            {{-- <div class="dropdown-menu dropdown-menu-end profile-drop-menu" aria-labelledby="profileDropDown">
-              <a class="dropdown-item" href="{{route('profile', Auth::user()->id)}}"><i data-feather="user"></i>Profile</a>
+            <div class="dropdown-menu dropdown-menu-end profile-drop-menu" aria-labelledby="profileDropDown">
+              <a class="dropdown-item" href=""><i data-feather="user"></i>Profile</a>
               <form action="{{route('logout')}}" method="POST" class="mb-0">
                 @csrf
                 <button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; text-align: left; width: 100%;">
                     <i data-feather="log-out"></i> Logout
                 </button>
-            </form> --}}
+            </form>
             </div>
           </li>
         </ul>

@@ -8,12 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class order extends Model
 {
     use HasFactory;
-    protected $table = 'orders'; // nama table lama
-    protected $guarded = [];
+   protected $table = 'orders';
 
-    // Relasi ke food item (biar bisa ambil nama makanan)
-    public function foodItem()
+    protected $fillable = [
+        'customer_id',
+        'pickup_time',
+        'status',
+        'payment_method',
+        'note',
+        'total_price',
+    ];
+
+    public function orderItems()
     {
-        return $this->belongsTo(FoodItem::class, 'food_id');
+        return $this->hasMany(order_item::class, 'order_id');
+    }
+
+    public function foodItems()
+    {
+        return $this->hasManyThrough(FoodItem::class, order_item::class, 'order_id', 'id', 'id', 'item_id');
     }
 }

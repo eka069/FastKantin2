@@ -58,6 +58,16 @@
             />
           </div>
 
+           <div class="space-y-2">
+                        <label for="payment_method" class="block font-medium">Metode Pembayaran</label>
+                        <select id="payment_method" name="payment_method" class="w-full p-2 border rounded-md" required>
+                            <option value="">Pilih metode pembayaran</option>
+                            <option value="cash" selected>Tunai (Bayar di Tempat)</option>
+                            <option value="transfer">Transfer Bank</option>
+                            <option value="qris">QRIS</option>
+                        </select>
+                    </div>
+
           <!-- Catatan -->
           <div class="mb-4">
             <label class="block text-gray-700 mb-1">Catatan</label>

@@ -8,10 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class cart extends Model
 {
     use HasFactory;
-    protected $table = 'cart'; // nama table lama
+    protected $table = 'cart';
     protected $guarded = [];
 
-    // Relasi ke food item (biar bisa ambil nama makanan)
     public function foodItem()
     {
         return $this->belongsTo(Category::class, 'kategori_id');    }

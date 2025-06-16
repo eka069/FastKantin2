@@ -78,6 +78,8 @@ class OrderController extends Controller
             'customer_id' => Auth::id(),
             'note' => $request->note,
             'pickup_time' => $request->pickup_time,
+            'status' => 'pending',
+            'payment_method' => $request->payment_method ?? 'cash',
             'total_price' => $subtotal,
         ]);
 
@@ -106,6 +108,7 @@ class OrderController extends Controller
 
     public function history()
     {
+
         return view('riwayat-pesanan');
     }
 }

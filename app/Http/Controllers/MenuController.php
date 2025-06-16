@@ -18,6 +18,12 @@ class MenuController extends Controller
         return view('seller.menu.tambah',compact('category'));
     }
 
+    public function show($id){
+        $menu = FoodItem::find($id);
+        $category = category::all();
+        return view('seller.menu.show', compact('menu', 'category'));
+    }
+
     public function edit($id){
         $menu = FoodItem::find($id);
         $category = category::all();
@@ -43,7 +49,7 @@ class MenuController extends Controller
         }
     }
 
-    public function update(Request $request, FoodItem $foodItem)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -53,9 +59,18 @@ class MenuController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
+        $foodItem = FoodItem::findOrFail($id);
         $foodItem->update($validated);
 
         return redirect()->route('menu.index')->with('success', 'Menu berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $foodItem = FoodItem::findOrFail($id);
+        $foodItem->delete();
+
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus.');
     }
 
 

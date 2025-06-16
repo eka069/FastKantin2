@@ -9,8 +9,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\SellerController;
+
+//dashboard
+Route::resource('dashboard', DashboardController::class);
 
 
 // Halaman utama

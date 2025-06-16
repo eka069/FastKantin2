@@ -22,26 +22,17 @@ class OrderController extends Controller
     public function index()
     {
 
-        // semuabackend di setor disini
-
-        // Ambil semua menu makanan
-        // $foodItems = FoodItem::all();
-        $foodItems = FoodItem::with('category')->get();
-        // $foodItems = getAllFoodItems();
-
-        // Ambil kategori untuk filter
-         $category = category::with('FoodItem')->get();
-        // $category = category::all();
-        // $categories = getAllCategories();
+        // $foodItems = FoodItem::with('category')->get();
+        $category = category::all();
 
         if (Auth::check() && Auth::user()->role === 'seller') {
             return redirect()->route('seller.dashboard'); // sesuaikan dengan route yang Anda pakai
         }
 
-        // return $category;
-        //return $foodItems;
         $foodItems = FoodItem::all();
+        //dd($foodItems);
         return view('index', compact('foodItems', 'category'));
+
     }
 
     /**
@@ -49,7 +40,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-    
+
     }
 
     /**
@@ -57,7 +48,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $cart = Cart::where('user_id', auth()->id())->get();
+
         // lalu proses order dan hapus cart
         Cart::where('user_id', auth()->id())->delete();
 

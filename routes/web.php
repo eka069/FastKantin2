@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\SellerController;
 
 
 // Halaman utama
 Route::get('/', [OrderController::class, 'index'])->name('home');
-Route::get('/menu/{id}', [OrderController::class, 'show'])->name('detail');
-
+Route::get('/menu-user/{id}', [OrderController::class, 'show'])->name('detail');
+Route::resource('menu', MenuController::class);
+Route::resource('category', CategoryController::class);
 
 // Produk dan order
 Route::resource('order', OrderController::class);

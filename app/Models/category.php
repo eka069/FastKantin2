@@ -9,14 +9,7 @@ use App\Models\FoodItem;
 class category extends Model
 {
     use HasFactory;
-    public function FoodItem()
-    {
-        return $this->hasMany(FoodItem::class);$category = Category::all();
-        $foodItems = FoodItem::all(); // sesuaikan jika pakai
-        $category = Category::all();
-
-    return view('index', compact('category', 'foodItems'));
-
-    }
+    protected $table = 'categories'; // nama table lama
+    protected $fillable = ['id','name'];
 
 }

@@ -20,25 +20,10 @@
       <h1 class="text-2xl font-bold mb-2">Tambah Menu Baru</h1>
       <p class="text-gray-600 mb-6">Isi detail menu yang ingin ditambahkan</p>
 
-      <?php if ($success): ?>
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-          <p>Menu berhasil ditambahkan!</p>
-          <p class="mt-2">
-            <a href="index.php" class="text-green-800 underline">Kembali ke daftar menu</a>
-          </p>
-        </div>
-      <?php else: ?>
-        <?php if (!empty($errors)): ?>
-          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-            <ul class="list-disc pl-5">
-              <?php foreach ($errors as $error): ?>
-                <li><?= htmlspecialchars($error) ?></li>
-              <?php endforeach; ?>
-            </ul>
-          </div>
-        <?php endif; ?>
+      <form method="POST" action="{{route('menu.store')}}" class="space-y-6" id="menu-form">
+        @method('post')
+        @csrf
 
-        <form method="POST" action="" enctype="multipart/form-data" class="space-y-6" id="menu-form">
           <div class="space-y-2">
             <label for="name" class="block font-medium">Nama Menu</label>
             <input type="text" id="name" name="name" placeholder="Masukkan nama menu"
@@ -49,12 +34,10 @@
           <div class="space-y-2">
             <label for="category_id" class="block font-medium">Kategori</label>
             <select id="category_id" name="category_id" class="w-full p-2 border rounded-md" required>
-              <option value="">Pilih kategori</option>
-              <?php foreach ($categories as $category): ?>
-                <option value="<?= $category['id'] ?>" <?= (($_POST['category_id'] ?? '') == $category['id']) ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($category['name']) ?>
-                </option>
-              <?php endforeach; ?>
+                @foreach ($category as $c )
+                    <option value="">{{$c->name}}</option>
+                @endforeach
+
             </select>
           </div>
 
@@ -93,55 +76,6 @@
             </a>
           </div>
         </form>
-      <?php endif; ?>
     </div>
   </div>
 
-  <!-- JavaScript untuk validasi form -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('menu-form');
-      if (form) {
-        form.addEventListener('submit', function(event) {
-          const name = document.getElementById('name').value.trim();
-          const category = document.getElementById('category_id').value;
-          const price = parseInt(document.getElementById('price').value);
-          const stock = parseInt(document.getElementById('stock').value);
-          const description = document.getElementById('description').value.trim();
-
-          let isValid = true;
-          let errorMessage = '';
-
-          if (!name) {
-            errorMessage += 'Nama menu harus diisi\n';
-            isValid = false;
-          }
-
-          if (!category) {
-            errorMessage += 'Kategori harus dipilih\n';
-            isValid = false;
-          }
-
-          if (isNaN(price) || price <= 0) {
-            errorMessage += 'Harga harus lebih dari 0\n';
-            isValid = false;
-          }
-
-          if (isNaN(stock) || stock < 0) {
-            errorMessage += 'Stok tidak boleh negatif\n';
-            isValid = false;
-          }
-
-          if (!description) {
-            errorMessage += 'Deskripsi harus diisi\n';
-            isValid = false;
-          }
-
-          if (!isValid) {
-            alert(errorMessage);
-            event.preventDefault();
-          }
-        });
-      }
-    });
-  </script>

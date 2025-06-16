@@ -9,11 +9,11 @@ class FoodItem extends Model
 {
     use HasFactory;
     protected $table = 'food_items'; // nama table lama
-    protected $guarded = []; // supaya mass-assignment bisa semua kolom
+    protected $fillable = ['id','name','category_id','merchant_id','price','stock','image'];
 
     public function category()
     {
-     return $this->belongsTo(FoodItem::class, 'food_id');
+    return $this->belongsTo(Category::class, 'id_kategori');
 
     }
 }

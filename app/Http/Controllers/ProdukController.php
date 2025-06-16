@@ -13,7 +13,7 @@ class ProdukController extends Controller
     */
    public function index()
    {
-    $FoodItem = FoodItem::all();
+    $foodItems = FoodItem::with('category')->get();
     $category = category::all();
     return view('index', compact('foodItems', 'category'));
 

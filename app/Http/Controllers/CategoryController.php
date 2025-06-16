@@ -7,44 +7,27 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index(){
+        $category = category::all();
+        return view('seller.category.index' , compact('category'));
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function create(){
+        return view('seller.category.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function edit($id){
+        $category = category::find($id);
+        return view('seller.category.edit', compact('category'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(category $category)
-    {
-        //
-    }
+    public function store(Request $request){
+        category::create($request->validate([
+            'name' => 'required',
+        ]));
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(category $category)
-    {
-        //
+        return redirect()->route('category.index')->with('success', 'Product created!');
     }
 
     /**
@@ -52,8 +35,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, category $category)
     {
-        //
+        $category->update($request->validate([
+            'name' => 'required'
+        ]));
+
+        return redirect()->route('category.index');
     }
+
 
     /**
      * Remove the specified resource from storage.

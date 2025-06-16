@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Keranjang')
+@section('title', 'cart')
 
 @section('content')
 

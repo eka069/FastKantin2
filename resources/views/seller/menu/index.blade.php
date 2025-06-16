@@ -44,40 +44,26 @@
                     <th class="py-3 px-4 text-left">Kategori</th>
                     <th class="py-3 px-4 text-left">Harga</th>
                     <th class="py-3 px-4 text-left">Stok</th>
+                    <th class="py-3 px-4 text-left">Descriiption</th>
                     <th class="py-3 px-4 text-left">aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Contoh data menu -->
+                @foreach ($menu as $m)
+                         <!-- Contoh data menu -->
                 <tr class="border-b hover:bg-gray-50">
-                    <td class="py-3 px-4">
-                        <div class="flex items-center gap-3">
-                            <div class="h-10 w-10 rounded-md">
-                                <img src="{{ asset('storage/menu/nasigoreng.jpg') }}" alt="Nasi Goreng" class="object-cover w-full h-full">
-                            </div>
-                            <span>Nasi Goreng</span>
-                        </div>
-                    </td>
-                    <td class="py-3 px-4">Makanan</td>
-                    <td class="py-3 px-4">Rp 15.000</td>
-                    <td class="py-3 px-4">25</td>
+                    <td class="py-3 px-4">{{$m -> name}}</td>
+                    <td class="py-3 px-4">{{$m -> category ->name}}</td>
+                    <td class="py-3 px-4">{{$m -> price}}</td>
+                    <td class="py-3 px-4">{{$m -> stock}}</td>
+                    <td class="py-3 px-4">{{$m -> description}}</td>
                     <td class="py-3 px-4"> <a href="{{ route('menu.edit',1) }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center transition-colors">
                        Edit Menu
                     </a></td>
                 </tr>
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="py-3 px-4">
-                        <div class="flex items-center gap-3">
-                            <div class="h-10 w-10 rounded-md ">
-                                <img src="{{ asset('storage/menu/esteh.jpg') }}" alt="Es Teh" class="object-cover w-full h-full">
-                            </div>
-                            <span>Es Teh</span>
-                        </div>
-                    </td>
-                    <td class="py-3 px-4">Minuman</td>
-                    <td class="py-3 px-4">Rp 5.000</td>
-                    <td class="py-3 px-4">50</td>
-                </tr>
+                @endforeach
+
+
             </tbody>
         </table>
     </div>

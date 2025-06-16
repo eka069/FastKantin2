@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class MenuController extends Controller
 {
     public function index(){
-        $menu = FoodItem::all();
+        $menu = FoodItem::with('category')->get();
         return view('seller.menu.index' , compact('menu'));
     }
 
@@ -26,39 +26,37 @@ class MenuController extends Controller
     }
 
     public function store(Request $request)
-{
-    $data = $request->validate([
-        'name' => 'required',
-        'category_id' => 'required',
-        'merchant_id' => 'required',
-        'price' => 'required',
-        'stock' => 'required',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string|max:1000',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+        ]);
 
-    try {
-        FoodItem::create($data);
-        return redirect()->route('menu.index')->with('success', 'Product created!');
-    } catch (\Exception $e) {
-        // Menampilkan error ke browser
-        return back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage())->withInput();
+        try {
+            FoodItem::create($validated);
+            return redirect()->route('menu.index')->with('success', 'Product created!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage())->withInput();
+        }
     }
-}
-
 
     public function update(Request $request, FoodItem $foodItem)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'merchant_id' => 'required|exists:merchants,id',
-        'price' => 'required|numeric|min:0',
-        'stock' => 'required|integer|min:0',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string|max:1000',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+        ]);
 
-    $foodItem->update($validated);
+        $foodItem->update($validated);
 
-    return redirect()->route('menu.index')->with('success', 'Menu berhasil diperbarui.');
-}
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil diperbarui.');
+    }
 
 
 

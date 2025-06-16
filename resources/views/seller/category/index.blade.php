@@ -25,13 +25,10 @@
             <tbody>
                 <!-- Contoh data menu -->
                 @foreach ( $category as $c )
-
-
-
                 <tr class="border-b hover:bg-gray-50">
                     <td class="py-3 px-4">{{$c->id}}</td>
                     <td class="py-3 px-4">{{$c->name}}</td>
-                    <td class="py-3 px-4"> <a href="{{ route('category.edit',{{$c->id) }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center transition-colors">
+                    <td class="py-3 px-4"> <a href="{{ route('category.edit',$c->id) }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center transition-colors">
                        Edit Kategori
                     </a></td>
                 </tr>

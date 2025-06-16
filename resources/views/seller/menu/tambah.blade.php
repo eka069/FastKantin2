@@ -35,7 +35,7 @@
             <label for="category_id" class="block font-medium">Kategori</label>
             <select id="category_id" name="category_id" class="w-full p-2 border rounded-md" required>
                 @foreach ($category as $c )
-                    <option value="">{{$c->name}}</option>
+                    <option value="{{$c->id}}">{{$c->name}}</option>
                 @endforeach
 
             </select>

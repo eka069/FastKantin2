@@ -17,6 +17,11 @@ class CategoryController extends Controller
         return view('seller.category.create');
     }
 
+    public function show($id){
+        $category = category::find($id);
+        return view('seller.category.show', compact('category'));
+    }
+
     public function edit($id){
         $category = category::find($id);
         return view('seller.category.edit', compact('category'));
@@ -30,9 +35,6 @@ class CategoryController extends Controller
         return redirect()->route('category.index')->with('success', 'Product created!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, category $category)
     {
         $category->update($request->validate([
@@ -43,9 +45,6 @@ class CategoryController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(category $category)
     {
         //

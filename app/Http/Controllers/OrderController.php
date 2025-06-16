@@ -17,31 +17,31 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     private $foodItems = [
-        ['name' => 'Nasi Goreng', 'category' => 'Nusantara', 'price' => 25000],
-        ['name' => 'Mie Ayam', 'category' => 'Nusantara', 'price' => 20000],
-        ['name' => 'Sate Ayam', 'category' => 'Nusantara', 'price' => 30000],
-        ['name' => 'Bakso', 'category' => 'Nusantara', 'price' => 18000],
-        ['name' => 'Rendang', 'category' => 'Nusantara', 'price' => 35000],
-        ['name' => 'Soto Ayam', 'category' => 'Nusantara', 'price' => 22000],
-        ['name' => 'Ayam Geprek', 'category' => 'Modern', 'price' => 28000],
-        ['name' => 'Tahu Gejrot', 'category' => 'Camilan', 'price' => 15000],
-        ['name' => 'Nasi Kuning', 'category' => 'Nusantara', 'price' => 23000],
-        ['name' => 'Gudeg', 'category' => 'Nusantara', 'price' => 27000],
-        ['name' => 'Pecel Lele', 'category' => 'Nusantara', 'price' => 24000],
-        ['name' => 'Lontong Sayur', 'category' => 'Nusantara', 'price' => 19000],
-        ['name' => 'Sop Buntut', 'category' => 'Nusantara', 'price' => 40000],
-        ['name' => 'Rawon', 'category' => 'Nusantara', 'price' => 32000],
-        ['name' => 'Gado-Gado', 'category' => 'Vegetarian', 'price' => 26000],
-        ['name' => 'Ayam Bakar', 'category' => 'Nusantara', 'price' => 31000],
-        ['name' => 'Pempek', 'category' => 'Camilan', 'price' => 20000],
-        ['name' => 'Nasi Uduk', 'category' => 'Nusantara', 'price' => 21000],
-        ['name' => 'Ikan Bakar', 'category' => 'Nusantara', 'price' => 38000],
-        ['name' => 'Ketoprak', 'category' => 'Vegetarian', 'price' => 22000],
-        ['name' => 'Seblak', 'category' => 'Camilan', 'price' => 17000],
-        ['name' => 'Martabak', 'category' => 'Camilan', 'price' => 29000],
-        ['name' => 'Siomay', 'category' => 'Camilan', 'price' => 16000],
-        ['name' => 'Tongseng', 'category' => 'Nusantara', 'price' => 33000],
-        ['name' => 'Coto Makassar', 'category' => 'Nusantara', 'price' => 29000],
+        ['id' => 1, 'name' => 'Nasi Goreng', 'category' => 'Nusantara', 'price' => 25000],
+        ['id' => 2, 'name' => 'Mie Ayam', 'category' => 'Nusantara', 'price' => 20000],
+        ['id' => 3, 'name' => 'Sate Ayam', 'category' => 'Nusantara', 'price' => 30000],
+        ['id' => 4, 'name' => 'Bakso', 'category' => 'Nusantara', 'price' => 18000],
+        ['id' => 5, 'name' => 'Rendang', 'category' => 'Nusantara', 'price' => 35000],
+        ['id' => 6, 'name' => 'Soto Ayam', 'category' => 'Nusantara', 'price' => 22000],
+        ['id' => 7, 'name' => 'Ayam Geprek', 'category' => 'Modern', 'price' => 28000],
+        ['id' => 8, 'name' => 'Tahu Gejrot', 'category' => 'Camilan', 'price' => 15000],
+        ['id' => 9, 'name' => 'Nasi Kuning', 'category' => 'Nusantara', 'price' => 23000],
+        ['id' => 10, 'name' => 'Gudeg', 'category' => 'Nusantara', 'price' => 27000],
+        ['id' => 11, 'name' => 'Pecel Lele', 'category' => 'Nusantara', 'price' => 24000],
+        ['id' => 12, 'name' => 'Lontong Sayur', 'category' => 'Nusantara', 'price' => 19000],
+        ['id' => 13, 'name' => 'Sop Buntut', 'category' => 'Nusantara', 'price' => 40000],
+        ['id' => 14, 'name' => 'Rawon', 'category' => 'Nusantara', 'price' => 32000],
+        ['id' => 15, 'name' => 'Gado-Gado', 'category' => 'Vegetarian', 'price' => 26000],
+        ['id' => 16, 'name' => 'Ayam Bakar', 'category' => 'Nusantara', 'price' => 31000],
+        ['id' => 17, 'name' => 'Pempek', 'category' => 'Camilan', 'price' => 20000],
+        ['id' => 18, 'name' => 'Nasi Uduk', 'category' => 'Nusantara', 'price' => 21000],
+        ['id' => 19, 'name' => 'Ikan Bakar', 'category' => 'Nusantara', 'price' => 38000],
+        ['id' => 20, 'name' => 'Ketoprak', 'category' => 'Vegetarian', 'price' => 22000],
+        ['id' => 21, 'name' => 'Seblak', 'category' => 'Camilan', 'price' => 17000],
+        ['id' => 22, 'name' => 'Martabak', 'category' => 'Camilan', 'price' => 29000],
+        ['id' => 23, 'name' => 'Siomay', 'category' => 'Camilan', 'price' => 16000],
+        ['id' => 24, 'name' => 'Tongseng', 'category' => 'Nusantara', 'price' => 33000],
+        ['id' => 25, 'name' => 'Coto Makassar', 'category' => 'Nusantara', 'price' => 29000],
     ];
 
 
@@ -90,54 +90,29 @@ class OrderController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
+        $foodItem = collect($this->foodItems)->firstWhere('id', $id);
 
+        if (!$foodItem) {
+            abort(404, 'Food item not found');
+        }
+
+        return view('detail', ['foodItem' => $foodItem]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function success()
     {
-
-        // lalu proses order dan hapus cart
-        Cart::where('user_id', auth()->id())->delete();
-
-        return redirect()->route('cart.index')->with('success', 'Pesanan berhasil dibuat!');
+        return view('success');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(order $order)
+    public function payment()
     {
+        return view('pembayaran');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(order $order)
+    public function history()
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(order $order)
-    {
-        //
+        return view('riwayat-pesanan');
     }
 }

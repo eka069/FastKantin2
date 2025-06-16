@@ -18,16 +18,19 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect()->route('login');
-})->name('logout');
+Route::post('/login', [LoginController::class, 'login']);
+
 
 //dashboard
 
 // Untuk user biasa
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('home');
+    Route::get('/menu-home/{id}', [OrderController::class, 'show'])->name('home-menu.detail');
+    Route::get('/riwayat', [OrderController::class, 'history'])->name('riwayat');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::get('/payment', [OrderController::class, 'payment'])->name('order.payment');
+    Route::get('/success', [OrderController::class, 'success'])->name('order.success');
 });
 
 // Untuk seller

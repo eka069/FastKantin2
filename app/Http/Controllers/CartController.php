@@ -14,13 +14,9 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart = Cart::with('food')->where('user_id', auth()->id())->get();
 
-        $cart_total = $cart->sum(function($item) {
-            return $item->quantity * $item->food->price;
-        });
 
-        return view('keranjang', compact('cart', 'cart_total'));
+        return view('cart');
     }
 
     /**

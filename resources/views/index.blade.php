@@ -1,36 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Beli Makanan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+@extends('layout.master')
 
-    {{-- Import font Poppins dari Google Fonts --}}
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+@section('title', 'Beranda')
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-50 text-gray-800">
+@section('content')
 
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-black">Fast Kantin</h1>
-
-            <div class="flex items-center space-x-6 text-sm">
-                <a href="#" class="text-gray-600 hover:text-indigo-600">Profile</a>
-                <a href="#" class="text-gray-600 hover:text-indigo-600">Cart</a>
-                <a href="#" class="text-gray-600 hover:text-indigo-600">Riwayat</a>
-                <a href="#" class="text-red-500 hover:text-red-700">Logout</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="flex flex-col items-center justify-center py-8">
+<div class="flex flex-col items-center justify-center py-8">
         <h1 class="text-3xl font-bold mb-2">FAST KANTIN</h1>
         <p class="text-lg text-gray-600">pesan makanan kantin dengan cepat dan mudah</p>
     </div>
@@ -85,11 +59,14 @@
                         <h2 class="text-lg font-semibold">{{ $item['name'] }}</h2>
                         <p class="text-sm text-gray-500">Rp {{ number_format($item['price'], 0, ',', '.') }}</p>
                         <p class="text-xs text-gray-400 mt-1">Kategori: {{ $item['category'] }}</p>
-                        <button class="mt-3 w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition">Beli Sekarang</button>
+                        <a href="{{ route('home-menu.detail', ['id' => $item['id']]) }}">
+                            <button type="button" class="mt-3 w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition">
+                                Beli Sekarang
+                            </button>
+                        </a>
                     </div>
                 @endforeach
             </div>
         @endif
     </main>
-</body>
-</html>
+@endsection

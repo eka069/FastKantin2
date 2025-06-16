@@ -1,154 +1,46 @@
-<?php
-// Start session
-session_start();
+@extends('layout.master')
+@section('title', 'Beranda')
+@section('content')
+  <!-- Detail Page -->
+  <div class="container mx-auto px-4">
+    <div class="bg-white rounded-xl  p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
 
+      <!-- Kolom Kiri: Gambar -->
+      <div class="w-full">
+        <img src="https://picsum.photos/600/400?random=1"
+             alt="Contoh Gambar Barang"
+             class="rounded-lg shadow-sm object-cover w-full h-80 md:h-full">
+          </div>
 
-// Pastikan path relatif benar
-$basePath = __DIR__; // Mendapatkan path absolut dari direktori saat ini
+      <!-- Kolom Kanan: Info & Form -->
+      <div>
+        <h2 class="text-2xl font-bold mb-2 text-gray-900">Nasi Goreng Spesial</h2>
+        <span class="block text-sm text-gray-600 mb-1">Makanan</span>
+        <p class="text-sm text-gray-600 mb-4">Stok tersedia: <span class="font-semibold text-green-600">27</span></p>
 
-// Aktifkan error reporting untuk debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+        <p class="text-gray-700 mb-6">
+          Nasi goreng spesial dengan campuran ayam, telur, sayur dan bumbu rahasia yang menggugah selera.
+        </p>
 
-// Koneksi ke database
-require_once $basePath . '/config/database.php';
-require_once $basePath . '/functions/user_functions.php';
-require_once $basePath . '/functions/menu_functions.php';
-require_once $basePath . '/functions/image_functions.php';
-require_once $basePath . '/functions/cart_functions.php';
-global $connection;
-// Cek apakah user sudah login
-if (!isLoggedIn(['user'])) {
-  if (isset($_SESSION['user']) && $_SESSION['user'] && $_SESSION['user']['role'] === 'seller') {
-    header("Location: {$baseUrl}seller/index.php");
-    exit;
-  }
-  // Redirect ke halaman login
-  header('Location: login.php');
-  exit;
-}
-// Ambil ID makanan dari parameter URL
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        <!-- Form -->
+        <form>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Jumlah yang ingin dibeli</label>
+            <input type="number" min="1" max="27" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan jumlah" />
+          </div>
 
-// Debug
-echo "<!-- Debug: ID yang diterima = $id -->";
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Catatan</label>
+            <textarea class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: tanpa pedas atau tambahan kerupuk"></textarea>
+          </div>
 
-// Ambil detail makanan berdasarkan ID
-$foodItem = getFoodItemById($connection, $id);
-
-// Debug
-if (!$foodItem) {
-  echo "<!-- Debug: Menu tidak ditemukan untuk ID = $id -->";
-}
-
-// Jika makanan tidak ditemukan, redirect ke halaman utama
-if (!$foodItem) {
-  header('Location: index.php');
-  exit;
-}
-
-// Header
-include $basePath . '/includes/header.php';
-?>
-
-<!-- Konten Utama -->
-<div class="container mx-auto px-4 py-8">
-  <a href="index.php" class="flex items-center text-gray-600 mb-6 hover:text-gray-900 transition-colors">
-    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-    </svg>
-    Kembali ke Daftar Menu
-  </a>
-
-  <div class="grid md:grid-cols-2 gap-8">
-    <div class="relative aspect-square overflow-hidden rounded-lg">
-      <img src="<?= htmlspecialchars($foodItem['image'] ? $foodItem['image'] : getPlaceholderUrl(600, 600)) ?>" alt="<?= htmlspecialchars($foodItem['name']) ?>" class="w-full h-full object-cover">
-      <span class="absolute top-4 right-4 bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">
-        <?= htmlspecialchars($foodItem['category_name'] ?? '') ?>
-      </span>
-    </div>
-
-    <div>
-      <h1 class="text-3xl font-bold mb-2"><?= htmlspecialchars($foodItem['name']) ?></h1>
-      <p class="text-gray-600 mb-4">Penjual: <?= htmlspecialchars($foodItem['seller_name']) ?></p>
-
-      <div class="flex items-center gap-4 mb-6">
-        <span class="text-2xl font-bold">Rp <?= number_format($foodItem['price'], 0, ',', '.') ?></span>
-        <span class="<?= $foodItem['stock'] > 0 ? 'bg-gray-100 text-gray-800' : 'bg-red-100 text-red-800' ?> px-3 py-1 rounded-full text-sm">
-          <?= $foodItem['stock'] > 0 ? "Stok: {$foodItem['stock']}" : "Habis" ?>
-        </span>
-      </div>
-
-      <hr class="my-6">
-
-      <div class="mb-6">
-        <h2 class="font-semibold text-lg mb-2">Deskripsi</h2>
-        <p class="text-gray-600"><?= nl2br(htmlspecialchars($foodItem['description'])) ?></p>
-      </div>
-
-      <div class="flex gap-3">
-        <?php if ($foodItem['stock'] > 0): ?>
-          <a href="pesan.php?id=<?= $foodItem['id'] ?>" class="flex-1 block bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded-md transition-colors">
-            Pesan Sekarang
-          </a>
-          <button id="add-to-cart" class="bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-md transition-colors flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            Tambah ke Keranjang
+          <button type="submit" formaction="{{ route('order.success') }}" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg">
+            Konfirmasi Pembelian
           </button>
-        <?php else: ?>
-          <button disabled class="flex-1 block bg-gray-400 text-white text-center py-3 px-4 rounded-md cursor-not-allowed">
-            Stok Habis
-          </button>
-        <?php endif; ?>
+        </form>
       </div>
+
     </div>
   </div>
-</div>
 
-<!-- JavaScript untuk tambah ke keranjang -->
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const addToCartButton = document.getElementById('add-to-cart');
-
-    if (addToCartButton) {
-      addToCartButton.addEventListener('click', function() {
-        // Tambahkan ke keranjang
-        fetch('api/cart_actions.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'action=add&item_id=<?= $foodItem['id'] ?>&quantity=1'
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              // Update tampilan keranjang
-              const headerCartCount = document.getElementById('header-cart-count');
-              if (headerCartCount) {
-                headerCartCount.textContent = data.cart_count;
-                headerCartCount.style.display = data.cart_count > 0 ? 'flex' : 'none';
-              }
-
-              // Tampilkan pesan sukses
-              alert('Menu berhasil ditambahkan ke keranjang!');
-            } else {
-              alert(data.message);
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat menambahkan ke keranjang.');
-          });
-      });
-    }
-  });
-</script>
-
-<?php
-// Footer
-include $basePath . '/includes/footer.html';
-?>
+@endsection

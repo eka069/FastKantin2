@@ -54,7 +54,7 @@
         <div id="foodList" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             @foreach ($foodItems as $item)
                 <div class="bg-white p-4 rounded-xl shadow hover:shadow-md transition">
-                    <img src="https://source.unsplash.com/featured/300x200?{{ urlencode($item->name) }},food"
+                    <img src="{{ asset('storage/' . $item->image)}}"
                          class="rounded-md mb-3 w-full h-40 object-cover"
                          alt="{{ $item->name }}"/>
                     <h2 class="text-lg font-semibold">{{ $item->name }}</h2>

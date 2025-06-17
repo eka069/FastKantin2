@@ -18,12 +18,13 @@
                         <li class="p-4" data-id="{{ $item->id }}" data-price="{{ $item->foodItem->price }}">
                             <div class="flex items-center">
                                 <div class="h-16 w-16 rounded-md overflow-hidden flex-shrink-0">
-                                    <img src="{{ $item->foodItem->image ?? 'https://via.placeholder.com/100' }}" class="w-full h-full object-cover">
+                                  <img src="{{ Storage::url($item->foodItem->image) }}" class="w-full h-full object-cover">
                                 </div>
 
                                 <div class="ml-4 flex-grow">
                                     <h3 class="font-medium">{{ $item->foodItem->name ?? 'Nama Tidak Ditemukan' }}</h3>
-                                    <p class="text-sm text-gray-600">Penjual: {{ $item->foodItem->seller_name ?? 'Tidak diketahui' }}</p>
+                                    <p class="text-sm text-gray-600">kategori: {{ $item->foodItem->category->name
+ ?? 'Tidak diketahui' }}</p>
                                     <p class="text-sm font-medium mt-1">Rp {{ number_format($item->foodItem->price, 0, ',', '.') }}</p>
                                 </div>
 

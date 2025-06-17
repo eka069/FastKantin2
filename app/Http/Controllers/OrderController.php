@@ -9,6 +9,7 @@ use App\Models\order;
 use App\Models\produk;
 use App\Models\FoodItem;
 use App\Models\order_item;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -101,6 +102,10 @@ class OrderController extends Controller
             'payment_method' => 'required',
             'note' => 'nullable|string',
         ]);
+
+        if($request->phone){
+            User::where('id', Auth::id())->update(['phone' => $request->phone]);
+        }
 
         // Ambil cart user dari database
         $cartItems = Cart::where('customer_id', Auth::id())->with('foodItem')->get();

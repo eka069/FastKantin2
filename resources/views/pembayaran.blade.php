@@ -16,12 +16,12 @@
                     @method('POST')
                     <div class="space-y-2">
                         <label class="block font-medium">Nama Pemesan</label>
-                        <input type="text" name="name" class="w-full p-2 border rounded-md" required value="{{ old('name') }}">
+                        <input type="text" disabled name="name" class="w-full p-2 border rounded-md" required value="{{ auth()->user()->name }}">
                     </div>
 
                     <div class="space-y-2">
                         <label class="block font-medium">Nomor Telepon</label>
-                        <input type="tel" name="phone" class="w-full p-2 border rounded-md" required value="{{ old('phone') }}">
+                        <input type="tel" name="phone" class="w-full p-2 border rounded-md" required value="{{auth()->user()->phone}}">
                     </div>
 
                     <div class="space-y-2">

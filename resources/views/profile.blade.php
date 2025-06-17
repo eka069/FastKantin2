@@ -11,9 +11,13 @@
         <div class="md:col-span-1">
             <div class="bg-white rounded-lg border p-4">
                 <div class="flex items-center mb-4">
-                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                        A
-                    </div>
+                    @if($user->image)
+                        <img src="{{ asset('storage/' . $user->image) }}" alt="Foto Profil" class="w-16 h-16 rounded-full object-cover">
+                    @else
+                        <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
+                    @endif
                     <div class="ml-4">
                         <h2 class="font-semibold">{{$user->name}}</h2>
                         <p class="text-sm text-gray-600">{{$user->email}}</p>

@@ -30,6 +30,7 @@
                     <th>price</th>
                     <th>Stock</th>
                     <th>desc</th>
+                    <th>image</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -42,8 +43,14 @@
                         <td>{{$m -> price}}</td>
                         <td>{{$m -> stock}}</td>
                         <td>{{$m -> description}}</td>
-                        <td class="d-flex">
-                            <a href="{{route('menu.edit', $m->id)}}" class="btn btn-warning btn-sm ">
+                        <td>
+                            @if ($m->image)
+                                <img src="{{ asset('storage/' . $m->image) }}" alt="Gambar saat ini" style="width: 80px; height: 80px; object-fit: cover;">
+                            @endif
+                        </td>
+                        <td class="">
+                            <div class="d-flex">
+                                     <a href="{{route('menu.edit', $m->id)}}" class="btn btn-warning btn-sm ">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <a href="{{route('menu.show', $m->id)}}" class="btn btn-info btn-sm mx-2">
@@ -52,6 +59,8 @@
                             <button class="btn btn-danger btn-sm btn-delete" data-id="{{ $m->id }}">
                                 <i class="fas fa-trash"></i>
                             </button>
+                            </div>
+
                         </td>
                     </tr>
                     @endforeach
@@ -64,6 +73,7 @@
                     <th>price</th>
                     <th>Stock</th>
                     <th>desc</th>
+                    <th>image</th>
                     <th>Aksi</th>
                 </tr>
             </tfoot>

@@ -45,7 +45,7 @@
         <div class="col-12 mb-3">
           <label class="form-label">Gambar Saat Ini</label>
           <div class="w-25 rounded overflow-hidden border">
-            <img src="{{ asset($menu->image) }}" alt="{{ $menu->name }}" class="img-fluid">
+            <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="img-fluid">
           </div>
         </div>
       @endif

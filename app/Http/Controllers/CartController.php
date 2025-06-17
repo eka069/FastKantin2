@@ -65,4 +65,14 @@ class CartController extends Controller
         return back()->with('success', 'Keranjang dikosongkan.');
     }
 
+        public function updateQty(Request $request, $id)
+        {
+            $cart = Cart::findOrFail($id);
+            $cart->qty = $request->qty;
+            $cart->save();
+
+            return response()->json(['success' => true]);
+        }
+
+
 }

@@ -34,6 +34,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/add-to-cart/{id}', [CartController::class, 'addToChart'])->name('add.to.cart');
     Route::post('/checkout', [OrderController::class, 'checkoutFromCart'])->name('order.checkout');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::patch('/cart-qty/{id}', [CartController::class, 'updateQty'])->name('cart.update.qty');
     Route::delete('/cart/delete/{id}', [CartController::class, 'destroy'])->name('cart.delete');
     Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/payment', [OrderController::class, 'payment'])->name('order.payment');

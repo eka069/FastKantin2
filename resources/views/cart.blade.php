@@ -23,8 +23,7 @@
 
                                 <div class="ml-4 flex-grow">
                                     <h3 class="font-medium">{{ $item->foodItem->name ?? 'Nama Tidak Ditemukan' }}</h3>
-                                    <p class="text-sm text-gray-600">kategori: {{ $item->foodItem->category->name
- ?? 'Tidak diketahui' }}</p>
+                                    <p class="text-sm text-gray-600">kategori: {{ $item->foodItem->category->name ?? 'Tidak diketahui' }}</p>
                                     <p class="text-sm font-medium mt-1">Rp {{ number_format($item->foodItem->price, 0, ',', '.') }}</p>
                                 </div>
 
@@ -51,7 +50,7 @@
             </div>
         </div>
 
-        <!-- Ringkasan + Kirim ke pembayaran -->
+        <!-- Ringkasan + Checkout -->
         <div class="lg:col-span-1">
             <div class="bg-white rounded-lg border p-4 sticky top-4">
                 <h2 class="font-semibold mb-4">Ringkasan Pesanan</h2>
@@ -72,7 +71,6 @@
 
                 <form id="checkout-form" action="{{ route('order.payment') }}" method="POST">
                     @csrf
-                    @method('POST')
                     <input type="hidden" name="items" id="items-data">
                     <button type="submit" class="block w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md mb-2">
                         Lanjutkan ke Pembayaran
@@ -90,6 +88,9 @@
         </div>
     </div>
 </div>
+
+{{-- jQuery diperlukan --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -112,31 +113,58 @@
             document.getElementById('total-price').textContent = formatRupiah(totalPrice);
         }
 
-        document.querySelectorAll('.qty-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const input = this.parentElement.querySelector('.qty-input');
-                let qty = parseInt(input.value);
-                if (this.dataset.action === 'plus') qty++;
-                else if (this.dataset.action === 'minus' && qty > 1) qty--;
-                input.value = qty;
-                updateSummary();
+        // Tombol plus/minus
+        $('.qty-btn').on('click', function () {
+            const li = $(this).closest('li[data-id]');
+            const input = li.find('.qty-input');
+            let qty = parseInt(input.val());
+            const action = $(this).data('action');
+
+            if (action === 'plus') qty++;
+            if (action === 'minus' && qty > 1) qty--;
+
+            input.val(qty).trigger('change');
+        });
+
+        // Saat qty diketik manual / diubah
+        $('.qty-input').on('input change', function () {
+            const li = $(this).closest('li[data-id]');
+            const id = li.data('id');
+            const qty = parseInt($(this).val());
+
+            if (qty < 1 || isNaN(qty)) return;
+
+            $.ajax({
+                url: `/cart-qty/${id}`,
+                method: 'PATCH',
+                data: {
+                    qty: qty,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (res) {
+                    if (res.success) {
+                        updateSummary();
+                    } else {
+                        alert('Gagal memperbarui.');
+                    }
+                },
+                error: function () {
+                    alert('Terjadi kesalahan. Coba lagi.');
+                }
             });
         });
 
-        document.querySelectorAll('.qty-input').forEach(input => {
-            input.addEventListener('change', updateSummary);
-        });
-
-        // Serialize qty ke hidden input saat submit
-        document.getElementById('checkout-form').addEventListener('submit', function () {
+        // Serialize data saat checkout
+        $('#checkout-form').on('submit', function () {
             const items = [];
-            document.querySelectorAll('li[data-id]').forEach(li => {
+            $('li[data-id]').each(function () {
+                const li = $(this);
                 items.push({
-                    id: li.getAttribute('data-id'),
-                    qty: parseInt(li.querySelector('.qty-input').value)
+                    id: li.data('id'),
+                    qty: parseInt(li.find('.qty-input').val())
                 });
             });
-            document.getElementById('items-data').value = JSON.stringify(items);
+            $('#items-data').val(JSON.stringify(items));
         });
     });
 </script>

@@ -60,12 +60,25 @@
                     <h2 class="text-lg font-semibold">{{ $item->name }}</h2>
                     <p class="text-sm text-gray-500">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
                     <p class="text-xs text-gray-400 mt-1">Kategori: {{ $item->category->name ?? 'Tidak ada' }}</p>
-                    <a href="{{ route('home-menu.detail', ['id' => $item->id]) }}">
-                        <button type="button"
-                                class="mt-3 w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition">
-                            Beli Sekarang
-                        </button>
-                    </a>
+                    <div class="flex space-x-2 mt-3">
+                        <a href="{{ route('home-menu.detail', ['id' => $item->id]) }}" class="w-3/4">
+                            <button type="button"
+                                    class="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition">
+                                Beli Sekarang
+                            </button>
+                        </a>
+                        <form action="{{ route('add.to.cart', $item->id) }}" method="POST" class="w-1/4">
+    @csrf
+    <button type="submit"
+            class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.5 17h9a1 1 0 00.85-1.53L17 13M7 13V6a1 1 0 011-1h6a1 1 0 011 1v7" />
+        </svg>
+    </button>
+</form>
+
+                    </div>
                 </div>
             @endforeach
         </div>

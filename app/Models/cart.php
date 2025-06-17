@@ -9,9 +9,13 @@ class cart extends Model
 {
     use HasFactory;
     protected $table = 'cart';
-    protected $guarded = [];
+    protected $fillable = [
+        'customer_id',
+        'food_id',
+        'qty',
+    ];
 
     public function foodItem()
     {
-        return $this->belongsTo(Category::class, 'kategori_id');    }
+        return $this->belongsTo(FoodItem::class, 'food_id');    }
 }

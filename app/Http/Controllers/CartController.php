@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\cart;
 use App\Models\FoodItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
@@ -14,88 +15,35 @@ class CartController extends Controller
      */
     public function index()
     {
-
-
         return view('cart');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function addToChart($id)
     {
-        //
-    }
+        $customerId = Auth::id();
+        $qty = 1;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $product = FoodItem::findOrFail($request->product_id);
-
-        $existing = Cart::where('user_id', auth()->id())
-            ->where('food_id', $product->id)
-            ->first();
+        $existing = cart::where([
+            'customer_id' => $customerId,
+            'food_id' => $id
+        ])->first();
 
         if ($existing) {
-            $existing->increment('quantity');
+            $existing->qty += $qty;
+            $existing->updated_at = now();
+            $existing->save();
         } else {
-            Cart::create([
-                'user_id' => auth()->id(),
-                'food_id' => $product->id,
-                'food_name' => $product->name,
-                'quantity' => 1,
-                'price' => $product->price,
-                'total' => $product->total,
+            cart::create([
+                'customer_id' => $customerId,
+                'food_id' => $id,
+                'qty' => $qty,
+                'created_at' => now(),
+                'updated_at' => now()
             ]);
         }
 
-        return redirect()->route('keranjang')->with('success', 'Produk ditambahkan ke keranjang!');
+        return redirect()->route('cart')->with('success', 'Item added to cart successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $cart = Cart::with('food')->where('user_id', auth()->id())->get();
-        return view('keranjang', compact('cart'));
 
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $newQty = $request->input('quantity');
-
-        Cart::where('user_id', auth()->id())
-            ->where('food_id', $id)
-            ->update(['quantity' => $newQty]);
-
-        return redirect()->route('keranjang')->with('success', 'Jumlah produk diperbarui.');
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        Cart::where('user_id', auth()->id())
-        ->where('food_id', $id)
-        ->delete();
-
-    return redirect()->route('keranjang')->with('success', 'Produk dihapus dari keranjang.');
-    }
 }

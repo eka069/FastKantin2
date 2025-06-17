@@ -32,6 +32,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/menu-home/{id}', [OrderController::class, 'show'])->name('home-menu.detail');
     Route::post('/order', [OrderController::class, 'store'])->name('order.store');
     Route::get('/riwayat', [OrderController::class, 'history'])->name('riwayat');
+    Route::post('/add-to-cart/{id}', [CartController::class, 'addToChart'])->name('add.to.cart');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/payment', [OrderController::class, 'payment'])->name('order.payment');
     Route::get('/success', [OrderController::class, 'success'])->name('order.success');

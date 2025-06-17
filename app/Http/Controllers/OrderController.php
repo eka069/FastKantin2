@@ -92,7 +92,6 @@ class OrderController extends Controller
         ]);
 
         return redirect()->route('order.success')->with('success', 'Pesanan berhasil disimpan!');
-
     }
 
 
@@ -108,11 +107,13 @@ class OrderController extends Controller
 
     public function history()
     {
-         $history = order::with(['orderItems', 'foodItems']) // eager load relasi
-        ->where('customer_id', Auth::id())
-        ->latest()
-        ->get();
+        $history = order::with(['orderItems', 'foodItems']) // eager load relasi
+            ->where('customer_id', Auth::id())
+            ->latest()
+            ->get();
 
         return view('riwayat-pesanan', compact('history'));
     }
+
+
 }

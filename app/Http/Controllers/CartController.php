@@ -15,7 +15,10 @@ class CartController extends Controller
      */
     public function index()
     {
-        return view('cart');
+        $cart = cart::where('customer_id', Auth::id())
+            ->with('foodItem')
+            ->get();
+        return view('cart', compact('cart'));
     }
 
     public function addToChart($id)
@@ -45,5 +48,21 @@ class CartController extends Controller
         return redirect()->route('cart')->with('success', 'Item added to cart successfully!');
     }
 
+    public function destroy($id)
+    {
+        cart::where('id', $id)
+            ->where('customer_id', Auth::id())
+            ->delete();
+
+        return back()->with('success', 'Item berhasil dihapus.');
+    }
+
+    public function clear()
+    {
+        cart::where('customer_id', Auth::id())
+            ->delete();
+
+        return back()->with('success', 'Keranjang dikosongkan.');
+    }
 
 }

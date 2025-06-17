@@ -12,6 +12,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IncomingOrderController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SellerController;
 
 // Autentikasi
@@ -40,6 +41,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/payment', [OrderController::class, 'payment'])->name('order.payment');
     Route::get('/success', [OrderController::class, 'success'])->name('order.success');
+    Route::resource('profile', ProfileController::class);
 });
 
 // Untuk seller

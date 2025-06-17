@@ -42,6 +42,12 @@
 
                     <div id="profile-dropdown"
                         class="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg border hidden z-50">
+
+                        <a href="{{ route('profile.index') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Profile
+                        </a>
+
                         <form id="logout-form" action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit"
@@ -50,6 +56,7 @@
                             </button>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>

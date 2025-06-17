@@ -24,7 +24,7 @@
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-black">Fast Kantin</h1>
             <div class="flex items-center space-x-6 text-sm">
-                <a href="#" class="text-gray-600 hover:text-indigo-600">Profile</a>
+                <a href="{{route('home')}}" class="text-gray-600 hover:text-indigo-600">home</a>
                 <a href="{{ route('cart') }}" class="text-gray-600 hover:text-indigo-600">Cart</a>
                 <a href="{{ route('riwayat') }}" class="text-gray-600 hover:text-indigo-600">Riwayat</a>
                 <a href="#" class="text-red-500 hover:text-red-700"

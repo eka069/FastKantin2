@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -13,15 +14,24 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = [
-            [
-                'name'=>'eka',
-                'email'=>'ekaeka@gmail.com',
-                'phone'=>'0987654321',
-                'password'=>'eka123'
-            ]
-        ];
+       // Role: user
+        User::create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'phone' => '081111111111',
+            'image' => null,
+            'password' => Hash::make('password'),
+            'role' => 'user',
+        ]);
 
-        User::insert($user);
+        // Role: admin
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'phone' => '082222222222',
+            'image' => null,
+            'password' => Hash::make('password'),
+            'role' => 'seller',
+        ]);
     }
 }

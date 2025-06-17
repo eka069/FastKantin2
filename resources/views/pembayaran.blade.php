@@ -6,95 +6,78 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6">Pembayaran</h1>
 
-
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Form Pembayaran -->
+        <!-- Form -->
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg border p-6">
                 <h2 class="text-xl font-semibold mb-4">Informasi Pesanan</h2>
-
-
-
-                <form class="space-y-6">
+                <form action="{{ route('order.checkout') }}" method="POST" class="space-y-6">
+                    @csrf
+                    @method('POST')
                     <div class="space-y-2">
-                        <label for="customer_name" class="block font-medium">Nama Pemesan</label>
-                        <input type="text" id="customer_name" name="customer_name"
-                            class="w-full p-2 border rounded-md" required value="Nama Contoh">
+                        <label class="block font-medium">Nama Pemesan</label>
+                        <input type="text" name="name" class="w-full p-2 border rounded-md" required value="{{ old('name') }}">
                     </div>
 
                     <div class="space-y-2">
-                        <label for="phone" class="block font-medium">Nomor Telepon</label>
-                        <input type="tel" id="phone" name="phone"
-                            class="w-full p-2 border rounded-md" value="08123456789">
+                        <label class="block font-medium">Nomor Telepon</label>
+                        <input type="tel" name="phone" class="w-full p-2 border rounded-md" required value="{{ old('phone') }}">
                     </div>
 
                     <div class="space-y-2">
-                        <label for="pickup_time" class="block font-medium">Waktu Pengambilan</label>
-                        <select id="pickup_time" name="pickup_time" class="w-full p-2 border rounded-md" required>
-                            <option value="">Pilih waktu pengambilan</option>
-                            <option value="08:00" selected>08:00 WIB</option>
-                            <option value="08:30">08:30 WIB</option>
-                            <option value="09:00">09:00 WIB</option>
+                        <label class="block font-medium">Waktu Pengambilan</label>
+                        <select name="pickup_time" class="w-full p-2 border rounded-md" required>
+                            <option disabled selected>-- Pilih waktu --</option>
+                            <option value="08:00" {{ old('pickup_time') == '08:00' ? 'selected' : '' }}>08:00 WIB</option>
+                            <option value="08:30" {{ old('pickup_time') == '08:30' ? 'selected' : '' }}>08:30 WIB</option>
+                            <option value="09:00" {{ old('pickup_time') == '09:00' ? 'selected' : '' }}>09:00 WIB</option>
                         </select>
                     </div>
 
                     <div class="space-y-2">
-                        <label for="payment_method" class="block font-medium">Metode Pembayaran</label>
-                        <select id="payment_method" name="payment_method" class="w-full p-2 border rounded-md" required>
-                            <option value="">Pilih metode pembayaran</option>
-                            <option value="cash" selected>Tunai (Bayar di Tempat)</option>
-                            <option value="transfer">Transfer Bank</option>
-                            <option value="qris">QRIS</option>
+                        <label class="block font-medium">Metode Pembayaran</label>
+                        <select name="payment_method" class="w-full p-2 border rounded-md" required>
+                            <option disabled selected>-- Pilih metode --</option>
+                            <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Tunai</option>
+                            <option value="transfer" {{ old('payment_method') == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                            <option value="qris" {{ old('payment_method') == 'qris' ? 'selected' : '' }}>QRIS</option>
                         </select>
                     </div>
 
                     <div class="space-y-2">
-                        <label for="notes" class="block font-medium">Catatan (Opsional)</label>
-                        <textarea id="notes" name="notes" rows="3"
-                            class="w-full p-2 border rounded-md">Contoh catatan</textarea>
+                        <label class="block font-medium">Catatan</label>
+                        <textarea name="note" rows="3" class="w-full p-2 border rounded-md">{{ old('note') }}</textarea>
                     </div>
 
-                    <div class="pt-4">
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md transition-colors">
-                            Konfirmasi Pesanan
-                        </button>
-                        <a href="#" class="w-full block text-center mt-2 text-blue-600 hover:underline">
-                            Kembali ke Keranjang
-                        </a>
-                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md">Konfirmasi Pesanan</button>
                 </form>
             </div>
         </div>
 
-        <!-- Ringkasan Pesanan -->
+        <!-- Ringkasan -->
         <div class="lg:col-span-1">
             <div class="bg-white rounded-lg border p-4 sticky top-4">
                 <h2 class="font-semibold mb-4">Ringkasan Pesanan</h2>
-
                 <div class="space-y-4 mb-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="font-medium">Nasi Goreng</p>
-                            <p class="text-sm text-gray-600">2 x Rp 15.000</p>
+                    @php $total = 0; @endphp
+                    @foreach ($cart as $item)
+                        @php
+                            $subtotal = $item->qty * $item->foodItem->price;
+                            $total += $subtotal;
+                        @endphp
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="font-medium">{{ $item->foodItem->name }}</p>
+                                <p class="text-sm text-gray-600">{{ $item->qty }} x Rp {{ number_format($item->foodItem->price, 0, ',', '.') }}</p>
+                            </div>
+                            <p class="font-medium">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
                         </div>
-                        <p class="font-medium">Rp 30.000</p>
-                    </div>
-
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="font-medium">Es Teh</p>
-                            <p class="text-sm text-gray-600">1 x Rp 5.000</p>
-                        </div>
-                        <p class="font-medium">Rp 5.000</p>
-                    </div>
+                    @endforeach
                 </div>
-
                 <hr class="my-4">
-
                 <div class="flex justify-between font-bold">
                     <span>Total</span>
-                    <span>Rp 35.000</span>
+                    <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>

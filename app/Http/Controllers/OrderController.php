@@ -94,16 +94,78 @@ class OrderController extends Controller
         return redirect()->route('order.success')->with('success', 'Pesanan berhasil disimpan!');
     }
 
+    public function checkoutFromCart(Request $request)
+    {
+        $request->validate([
+            'pickup_time' => 'required',
+            'payment_method' => 'required',
+            'note' => 'nullable|string',
+        ]);
+
+        // Ambil cart user dari database
+        $cartItems = Cart::where('customer_id', Auth::id())->with('foodItem')->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart')->with('error', 'Keranjang belanja kosong.');
+        }
+
+        // Hitung total
+        $total = $cartItems->sum(function ($item) {
+            return $item->foodItem->price * $item->qty;
+        });
+
+        // Buat order
+        $order = Order::create([
+            'customer_id' => Auth::id(),
+            'note' => $request->note,
+            'pickup_time' => $request->pickup_time,
+            'payment_method' => $request->payment_method,
+            'status' => 'pending',
+            'total_price' => $total,
+        ]);
+
+        // Simpan item satu per satu ke order_items
+        foreach ($cartItems as $item) {
+            order_item::create([
+                'order_id' => $order->id,
+                'item_id' => $item->foodItem->id,
+                'quantity' => $item->qty,
+                'price_per_item' => $item->foodItem->price,
+                'subtotal' => $item->qty * $item->foodItem->price,
+            ]);
+        }
+
+        // Kosongkan cart setelah checkout
+        Cart::where('customer_id', Auth::id())->delete();
+
+        return redirect()->route('order.success')->with('success', 'Pesanan berhasil disimpan!');
+    }
+
 
     public function success()
     {
         return view('success');
     }
 
-    public function payment()
+    public function payment(Request $request)
     {
-        return view('pembayaran');
+        $cart = cart::where('customer_id', Auth::id())
+            ->with('foodItem')
+            ->get();
+
+        if ($request->has('items')) {
+            $items = collect(json_decode($request->items, true));
+            foreach ($cart as $item) {
+                $match = $items->firstWhere('id', $item->id);
+                if ($match) {
+                    $item->qty = $match['qty'];
+                }
+            }
+        }
+
+        return view('pembayaran', compact('cart'));
     }
+
 
     public function history()
     {
@@ -114,6 +176,4 @@ class OrderController extends Controller
 
         return view('riwayat-pesanan', compact('history'));
     }
-
-
 }

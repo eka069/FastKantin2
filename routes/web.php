@@ -24,7 +24,6 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout');
 
-//dashboard
 
 // Untuk user biasa
 Route::middleware(['auth', 'role:user'])->group(function () {
@@ -33,10 +32,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/order', [OrderController::class, 'store'])->name('order.store');
     Route::get('/riwayat', [OrderController::class, 'history'])->name('riwayat');
     Route::post('/add-to-cart/{id}', [CartController::class, 'addToChart'])->name('add.to.cart');
+    Route::post('/checkout', [OrderController::class, 'checkoutFromCart'])->name('order.checkout');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::delete('/cart/delete/{id}', [CartController::class, 'destroy'])->name('cart.delete');
     Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-    Route::get('/payment', [OrderController::class, 'payment'])->name('order.payment');
+    Route::post('/payment', [OrderController::class, 'payment'])->name('order.payment');
     Route::get('/success', [OrderController::class, 'success'])->name('order.success');
 });
 

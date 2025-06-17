@@ -108,7 +108,11 @@ class OrderController extends Controller
 
     public function history()
     {
+         $history = order::with(['orderItems', 'foodItems']) // eager load relasi
+        ->where('customer_id', Auth::id())
+        ->latest()
+        ->get();
 
-        return view('riwayat-pesanan');
+        return view('riwayat-pesanan', compact('history'));
     }
 }

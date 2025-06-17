@@ -16,4 +16,9 @@ class order_item extends Model
         'price_per_item',
         'subtotal',
     ];
+
+    public function foodItem()
+    {
+        return $this->belongsTo(FoodItem::class, 'item_id');
+    }
 }

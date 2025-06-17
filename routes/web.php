@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\IncomingOrderController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\SellerController;
 
@@ -44,6 +45,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 // Untuk seller
 Route::middleware(['auth', 'role:seller'])->group(function () {
     Route::resource('dashboard', DashboardController::class);
+    Route::resource('incoming-orders', IncomingOrderController::class);
     Route::resource('menu', MenuController::class);
     Route::resource('category', CategoryController::class);
 });

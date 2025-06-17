@@ -17,5 +17,6 @@ class cart extends Model
 
     public function foodItem()
     {
-        return $this->belongsTo(FoodItem::class, 'food_id');    }
+        return $this->belongsTo(FoodItem::class, 'food_id');
+    }
 }

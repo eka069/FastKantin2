@@ -28,4 +28,9 @@ class order extends Model
     {
         return $this->hasManyThrough(FoodItem::class, order_item::class, 'order_id', 'id', 'id', 'item_id');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'customer_id');
+    }
 }
